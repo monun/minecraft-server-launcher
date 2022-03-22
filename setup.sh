@@ -10,8 +10,6 @@ IFS=- read -r server version build <<<"$1"
 [[ -f .server ]] && IFS=- read -r prev_server prev_version prev_build <<<"$(cat .server)"
 [[ -z $prev_server ]] && prev_server="unspecified"
 [[ -z $prev_version ]] && prev_version="unspecified"
-# Set build to unspecified if different version
-[[ -z $prev_build || "$version" != "$prev_version" ]] && prev_build="unspecified"
 
 # Use .server information if parameter unspecified
 [[ $server == "unspecified" ]] && server=$prev_server
@@ -20,6 +18,9 @@ IFS=- read -r server version build <<<"$1"
 
 # Exit if version is unspecified
 [[ $version == "unspecified" ]] && exit
+
+# Set build to unspecified if different version or different server
+[[ "$server" != "$prev_server" || "$version" != "$prev_version" ]] && build="unspecified"
 
 # Create a repository to store jar (prevent re-download)
 repo="$HOME/.mcservers/$server"
