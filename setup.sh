@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Parameter parsing (server-version-build) default value is 'unspecified'
+IFS=- read -r server version build <<<"$1"
+[[ -z $server ]] && server="unspecified"
+[[ -z $version ]] && version="unspecified"
+[[ -z $build ]] && build="unspecified"
+
+# .server file parsing (server-version-build) default value is 'unspecified'
+[[ -f .server ]] && IFS=- read -r prev_server prev_version prev_build <<<"$(cat .server)"
+[[ -z $prev_server ]] && prev_server="unspecified"
+[[ -z $prev_version ]] && prev_version="unspecified"
+# Set build to unspecified if different version
+[[ -z $prev_build || "$version" != "$prev_version" ]] && prev_build="unspecified"
+
+# Use .server information if parameter unspecified
+[[ $server == "unspecified" ]] && server=$prev_server
+[[ $version == "unspecified" ]] && version=$prev_version
+[[ $build == "unspecified" ]] && build=$prev_build
+
+# Exit if version is unspecified
+[[ $version == "unspecified" ]] && exit
+
+# Create a repository to store jar (prevent re-download)
+repo="$HOME/.mcservers/$server"
+mkdir -p "$repo"
+
+# Paper
+if [[ $server == "paper" ]]; then
+  # Use latest build when the build is 'latest' or 'unspecified'
+  [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version" | jq -r .builds[-1])
+
+  jar="$repo/paper-$version-$build.jar"
+
+  # Download paper if jar not exists
+  if [[ ! -f $jar ]]; then
+    download=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build" | jq -r .downloads.application.name)
+    wget -q "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build/downloads/$download" -O "$jar"
+  fi
+# Spigot
+elif [[ $server == "spigot" ]]; then
+  # Use latest build when the build is 'latest' or 'unspecified'
+  [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://hub.spigotmc.org/versions/$version.json" | jq -r '.name')
+
+  jar="$repo/spigot-$version-$build.jar"
+
+  # Build spigot if jar not exists
+  if [[ ! -f $jar ]]; then
+    # Create '.buildtools' directory and change
+    mkdir -p .buildtools
+    cd .buildtools || exit
+    # Delete all files in '.buildtools'
+    rm -rf ./*
+
+    # Download BuildTools.jar
+    wget -q -c --content-disposition -P "$repo" -N "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
+    # Build spigot
+    java -jar "$repo/BuildTools.jar" --rev "$build"
+    # Move artifact to repo
+    mv "./spigot-$version.jar" "$jar"
+
+    # Move to server directory and delete all files in '.buildtools'
+    cd .. || exit
+    rm -rf .buildtools
+  fi
+# Vanilla
+elif [[ $server == "vanilla" ]]; then
+  jar="$repo/vanilla-$version.jar"
+  build="unspecified"
+
+  # Build vanilla server if jar not exists
+  if [[ ! -f $jar ]]; then
+    package=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json | jq -r ".versions[] | select(.id==\"$version\")".url)
+    download=$(curl -s "$package" | jq -r ".downloads.server.url")
+    wget -q "$download" -O "$jar"
+  fi
+fi
+
+# Write server info to '.server'
+[[ -n $jar ]] && echo "$server-$version-$build" >.server
+
+# Print the server file path
+echo "$jar"
