@@ -16,7 +16,7 @@ BACKUP=false
 RESTART=false
 # Preinstallation plugins (url)
 PLUGINS=(
-  'https://github.com/monun/auto-reloader/releases/latest/download/AutoReloader.jar'
+  # 'https://github.com/monun/auto-reloader/releases/latest/download/AutoReloader.jar'
 )
 
 ####################################################################
@@ -42,7 +42,7 @@ else
 fi
 
 # Exit if jar not found
-[[ ! -f $JAR ]] && echo "Jar not found for $SERVER" && exit
+[[ ! -f $JAR ]] && echo "Jar not found for $SERVER - $JAR" && exit
 
 # Download plugins (Only if it's not vanilla)
 if [[ $SERVER != vanilla* ]]; then

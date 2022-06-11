@@ -56,7 +56,7 @@ elif [[ $server == "spigot" ]]; then
     # Download BuildTools.jar
     wget -q -c --content-disposition -P "$repo" -N "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
     # Build spigot
-    java -jar "$repo/BuildTools.jar" --rev "$build"
+    java -jar "$repo/BuildTools.jar" --rev "$build" >/dev/null 2>&1
     # Move artifact to repo
     mv "./spigot-$version.jar" "$jar"
 
