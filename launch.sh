@@ -37,10 +37,8 @@ cd "$NAME" || exit
 # Check local path
 if [[ -f $SERVER ]]; then
   JAR=$SERVER
-fi
-
 # Setup server
-if [[ -f ../setup.sh ]]; then
+elif [[ -f ../setup.sh ]]; then
   JAR=$(../setup.sh "$SERVER" | tail)
 else
   JAR=$(curl -s "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/setup.sh" | bash -s -- "$SERVER" | tail)
