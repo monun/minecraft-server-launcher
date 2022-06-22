@@ -71,4 +71,5 @@ export BACKUP
 export RESTART
 
 # Run server
+chmod +x ./start.sh
 ./start.sh launch
