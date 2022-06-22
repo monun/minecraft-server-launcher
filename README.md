@@ -1,8 +1,9 @@
 # Minecraft server launcher script (Shell)
 ## Requirements
+* java
 * wget
 * [**jq**](https://stedolan.github.io/jq/)
-* java
+* git (Spigot only)
 * tar (Optional)
 ## Installation
 1. Download required programs.
