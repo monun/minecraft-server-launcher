@@ -34,6 +34,10 @@ PLUGINS=(
 mkdir -p "$NAME"
 cd "$NAME" || exit
 
+# Check local path
+if [[ -f $SERVER ]]; then
+  JAR=$SERVER
+
 # Setup server
 if [[ -f ../setup.sh ]]; then
   JAR=$(../setup.sh "$SERVER" | tail)
