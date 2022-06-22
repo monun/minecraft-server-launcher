@@ -4,8 +4,8 @@
 
 # Server directory name
 NAME="server"
-# Server type (type[vanilla, spigot, paper]-version[1.xx.x, unspecified]-build[latest, unspecified, xx])
-SERVER="paper-1.18.2-unspecified"
+# Server type (local path or type[vanilla, spigot, paper]-version[1.xx.x, unspecified]-build[latest, unspecified, xx])
+SERVER="paper-1.19-unspecified"
 # Server memory (GB)
 MEMORY=8
 # jdwp port, Enable debug mode when 0 or higher (5005)
