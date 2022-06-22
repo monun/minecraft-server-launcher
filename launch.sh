@@ -37,6 +37,7 @@ cd "$NAME" || exit
 # Check local path
 if [[ -f $SERVER ]]; then
   JAR=$SERVER
+fi
 
 # Setup server
 if [[ -f ../setup.sh ]]; then
@@ -60,7 +61,7 @@ fi
 if [[ -f ../start.sh ]]; then
   cp ../start.sh .
 else
-  wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/start.sh" > /dev/null
+  wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/start.sh" >/dev/null
 fi
 
 # Export variables for start.sh
