@@ -9,11 +9,16 @@ fi
 while :; do
   rm -f ".start"
 
+  echo "NAME=$NAME"
   echo "JAR=$JAR"
   echo "MEMORY=$MEMORY"
-  echo "DEBUG_PORT=$DEBUG_PORT"
   echo "BACKUP=$BACKUP"
   echo "RESTART=$RESTART"
+  echo "PLAYERS=$PLAYERS"
+  echo "PLUGINS=$PLUGINS"
+  echo "WORLDS=$WORLDS"
+  echo "PORT=$PORT"
+  echo "DEBUG_PORT=$DEBUG_PORT"
 
   jvm_arguments=(
     "-Xmx${MEMORY}G"
@@ -32,6 +37,7 @@ while :; do
     "-XX:MaxTenuringThreshold=1"
     "-Dusing.aikars.flags=https://mcflags.emc.gs"
     "-Daikars.new.flags=true"
+    "-Dfile.encoding=UTF-8"
     "-Dcom.mojang.eula.agree=true"
   )
 
@@ -70,8 +76,15 @@ while :; do
   jvm_arguments+=(
     "-jar"
     "$JAR"
-    "nogui"
+    "--nogui"
   )
+
+    [[ $PLAYERS -gt -1 ]] && jvm_arguments+=("-s$PLAYERS")
+    [[ ! -z $PLUGINS ]] && jvm_arguments+=("-P$PLUGINS")
+    [[ ! -z $WORLDS ]] && jvm_arguments+=("-W$WORLDS")
+    [[ $PORT -gt -1 ]] && jvm_arguments+=("-p$PORT")
+
+  echo "Parameters: ${jvm_arguments[@]}"
 
   java "${jvm_arguments[@]}"
 

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Check wget
+! type -p wget >/dev/null && echo "wget not found" && exit
+
+# Check jq
+! type -p jq >/dev/null && echo "jq not found" && exit
+
+# Check java
+! type -p java >/dev/null && echo "java not found" && exit
+
+# Check local path
+
+[[ -f $SERVER ]] && JAR=$SERVER
+
+if [[ -z $JAR ]]; then
+  [[ -f ../startDeploy ]] && cp ../startDeploy .
+  [[ ! -f startDeploy ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/startDeploy"
+  JAR=$(./startDeploy $SERVER)
+fi
+
+# Exit if jar not found
+[[ ! -f $JAR ]] && echo "Jar not found for $SERVER - $JAR" && exit
+
+export JAR
+
+# Download plugins (Only if it's not vanilla)
+if [[ $SERVER != vanilla* ]]; then
+  dest="$PLUGINS"
+  [[ -z $dest ]] && dest="./plugins"
+
+  mkdir -p "$dest"
+  for i in "${DEFAULT_PLUGINS[@]}"; do
+    wget -q -c --content-disposition -P "$dest" -N "$i"
+  done
+fi
+
+# Download start script
+[[ -f ../start.sh ]] && cp ../start.sh .
+[[ ! -f start.sh ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/start.sh" >/dev/null
+
+# Run server
+chmod +x ./start.sh
+./start.sh launch
