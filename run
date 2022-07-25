@@ -50,5 +50,5 @@ mkdir -p "$DIR" && cd "$DIR" || exit
 [[ -f ../startSetup ]] && cp ../startSetup .
 [[ ! -f startSetup ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/startSetup"
 
-chmod +x startSetup
+chmod +x ./startSetup
 ./startSetup

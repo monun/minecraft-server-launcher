@@ -15,7 +15,7 @@
 if [[ -z $JAR ]]; then
   [[ -f ../startDeploy ]] && cp ../startDeploy .
   [[ ! -f startDeploy ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/startDeploy"
-  chmod +x startDeploy
+  chmod +x ./startDeploy
   JAR=$(./startDeploy $SERVER)
 fi
 
@@ -40,5 +40,5 @@ fi
 [[ ! -f start.sh ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/start.sh" >/dev/null
 
 # Start server
-chmod +x start.sh
+chmod +x ./start.sh
 ./start.sh launch
