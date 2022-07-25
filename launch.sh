@@ -4,8 +4,8 @@
 
 # Server directory name
 NAME="server"
-# Server type (local path or type[vanilla, spigot, paper]-version[1.xx.x, unspecified]-build[latest, unspecified, xx])
-SERVER="paper-1.19-unspecified"
+# Server type (local path or type[vanilla, spigot, paper]-version[1.xx.x, unspecified]-build[latest, unspecified, xx]-[dev])
+SERVER="paper-1.19-latest"
 # Server memory (GB)
 MEMORY=8
 # jdwp port, Enable debug mode when 0 or higher (5005)
@@ -16,7 +16,7 @@ BACKUP=false
 RESTART=false
 # Preinstallation plugins (url)
 PLUGINS=(
-  # 'https://github.com/monun/auto-reloader/releases/latest/download/AutoReloader.jar'
+  # 'https://github.com/monun/auto-reloader/releases/download/0.0.4/auto-reloader-0.0.4.jar'
 )
 
 ####################################################################

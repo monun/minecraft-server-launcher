@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Parameter parsing (server-version-build) default value is 'unspecified'
-IFS=- read -r server version build <<<"$1"
+IFS=- read -r server version build dev <<<"$1"
 [[ -z $server ]] && server="unspecified"
 [[ -z $version ]] && version="unspecified"
 [[ -z $build ]] && build="unspecified"
@@ -31,15 +31,20 @@ if [[ $server == "paper" ]]; then
   # Use latest build when the build is 'latest' or 'unspecified'
   [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version" | jq -r .builds[-1])
 
-  jar="$repo/paper-$version-$build.jar"
+  download="application"
+  [[ $dev == "dev" ]] && download="mojang-mappings"
+  downloadFile=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build" | jq -r .downloads.\"$download\".name)
+  jar="$repo/$downloadFile"
 
   # Download paper if jar not exists
   if [[ ! -f $jar ]]; then
-    download=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build" | jq -r .downloads.application.name)
-    wget -q "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build/downloads/$download" -O "$jar"
+    wget -q "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build/downloads/$downloadFile" -O "$jar"
   fi
+
 # Spigot
 elif [[ $server == "spigot" ]]; then
+  [[ $dev == "dev" ]] && echo "Spigot does not support development mode." && exit
+
   # Use latest build when the build is 'latest' or 'unspecified'
   [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://hub.spigotmc.org/versions/$version.json" | jq -r '.name')
 
@@ -66,6 +71,8 @@ elif [[ $server == "spigot" ]]; then
   fi
 # Vanilla
 elif [[ $server == "vanilla" ]]; then
+  [[ $dev == "dev" ]] && echo "Vanilla does not support development mode." && exit
+
   jar="$repo/vanilla-$version.jar"
   build="unspecified"
 
