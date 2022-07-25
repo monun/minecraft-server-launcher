@@ -27,7 +27,7 @@ PORT=-1
 DEBUG_PORT=-1
 # Preinstallation plugins (url)
 DEFAULT_PLUGINS=(
-   'https://github.com/monun/auto-reloader/releases/download/0.0.4/auto-reloader-0.0.4.jar'
+   'https://github.com/monun/auto-reloader/releases/download/0.0.5/auto-reloader-0.0.5.jar'
 )
 
 #####################################################################
