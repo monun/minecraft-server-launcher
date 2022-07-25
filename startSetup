@@ -30,7 +30,7 @@ if [[ $SERVER != vanilla* ]]; then
   [[ -z $dest ]] && dest="./plugins"
 
   mkdir -p "$dest"
-  for i in "${DEFAULT_PLUGINS[@]}"; do
+  for i in "$@"; do
     wget -q -c --content-disposition -P "$dest" -N "$i"
   done
 fi
