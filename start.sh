@@ -9,7 +9,6 @@ fi
 while :; do
   rm -f ".start"
 
-  echo "NAME=$NAME"
   echo "JAR=$JAR"
   echo "MEMORY=$MEMORY"
   echo "BACKUP=$BACKUP"
