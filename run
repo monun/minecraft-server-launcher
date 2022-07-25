@@ -5,7 +5,7 @@
 # Server directory name
 DIR="server"
 # Server type (local path or type[vanilla, spigot, paper]-version[1.xx.x, unspecified]-build[latest, unspecified, xx]-[dev])
-SERVER="paper-1.19-latest-dev"
+SERVER="paper-1.19-latest"
 # Server memory (GB)
 MEMORY=4
 # When the server shuts down, use tar to back up.
