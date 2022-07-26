@@ -7,10 +7,10 @@
 * tar (Optional)
 ## Installation
 1. Download required programs.
-2. `wget https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/launch.sh` Download [**launch.sh**](https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/launch.sh) to the server path.
-3. `chmod +x ./launch.sh` to allow executable permissions.
-4. Modify the configuration of launch.sh (Optional)
-5. `./launch.sh` to run the server.
+2. `wget https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/run` Download [**run**](https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/run) to the server path.
+3. `chmod +x ./run` to allow executable permissions.
+4. Modify the configuration of run (Optional)
+5. `./run` to run the server.
 ## Note
 * Server jar files are in `~/.mcservers/`
 * Spigot builds using [**BuildTools**](https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar). It may take a few minutes.
