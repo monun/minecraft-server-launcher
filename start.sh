@@ -8,6 +8,24 @@ fi
 
 while :; do
   rm -f ".start"
+  
+  JVM_TYPE=""
+  
+  # outputs to stderr by default. route to stdout
+  JAVA_PROPS=$(java -XshowSettings:properties -version 2>&1)
+  
+  # If current showSettings properties contains Hotspot string:
+  if [[ "$JAVA_PROPS" == *"Hotspot"* ]]; then
+  
+    # Hotspot VM (e.g. Oracle JVM, Adopt Zulu, etc.), use Aikar's flag and JVM GC Optimizations
+    JVM_TYPE="Hotspot"
+  elif [[ "$JAVA_PROPS" == *"OpenJ9"* ]]; then
+    
+    # OpenJ9 VM (e.g. IBM Semeru, etc.), use Nursery extension 
+    JVM_TYPE="OpenJ9"
+  fi
+  
+  # else, We can consider it is a Eclipse OpenJ9 JVM, Should use Nursery optimization flags instead.
 
   echo "JAR=$JAR"
   echo "MEMORY=$MEMORY"
@@ -18,48 +36,98 @@ while :; do
   echo "WORLDS=$WORLDS"
   echo "PORT=$PORT"
   echo "DEBUG_PORT=$DEBUG_PORT"
+  echo "JVM_HOTSPOT=$JVM_HOTSPOT"
+  echo "JVM_HOTSPOT=$JVM_HOTSPOT"
 
   jvm_arguments=(
     "-Xmx${MEMORY}G"
     "-Xms${MEMORY}G"
-    "-XX:+ParallelRefProcEnabled"
-    "-XX:MaxGCPauseMillis=200"
-    "-XX:+UnlockExperimentalVMOptions"
-    "-XX:+DisableExplicitGC"
-    "-XX:+AlwaysPreTouch"
-    "-XX:G1HeapWastePercent=5"
-    "-XX:G1MixedGCCountTarget=4"
-    "-XX:G1MixedGCLiveThresholdPercent=90"
-    "-XX:G1RSetUpdatingPauseTimePercent=5"
-    "-XX:SurvivorRatio=32"
-    "-XX:+PerfDisableSharedMem"
-    "-XX:MaxTenuringThreshold=1"
-    "-Dusing.aikars.flags=https://mcflags.emc.gs"
-    "-Daikars.new.flags=true"
-    "-Dfile.encoding=UTF-8"
-    "-Dcom.mojang.eula.agree=true"
   )
-
-  if [[ $MEMORY -lt 12 ]]; then
-    echo "Use Aikar's standard memory options"
+  
+  if [[ "$JVM_HOTSPOT" == "Hotspot" ]]; then
     jvm_arguments+=(
-      "-XX:G1NewSizePercent=30"
-      "-XX:G1MaxNewSizePercent=40"
-      "-XX:G1HeapRegionSize=8M"
-      "-XX:G1ReservePercent=20"
-      "-XX:InitiatingHeapOccupancyPercent=15"
+      "-XX:+ParallelRefProcEnabled"
+      "-XX:MaxGCPauseMillis=200"
+      "-XX:+UnlockExperimentalVMOptions"
+      "-XX:+DisableExplicitGC"
+      "-XX:+AlwaysPreTouch"
+      "-XX:G1HeapWastePercent=5"
+      "-XX:G1MixedGCCountTarget=4"
+      "-XX:G1MixedGCLiveThresholdPercent=90"
+      "-XX:G1RSetUpdatingPauseTimePercent=5"
+      "-XX:SurvivorRatio=32"
+      "-XX:+PerfDisableSharedMem"
+      "-XX:MaxTenuringThreshold=1"
+      "-Dusing.aikars.flags=https://mcflags.emc.gs"
+      "-Daikars.new.flags=true"
+      "-Dfile.encoding=UTF-8"
+      "-Dcom.mojang.eula.agree=true"
     )
+    
+    if [[ $MEMORY -lt 12 ]]; then
+      echo "Use Aikar's standard memory options"
+      jvm_arguments+=(
+        "-XX:G1NewSizePercent=30"
+        "-XX:G1MaxNewSizePercent=40"
+        "-XX:G1HeapRegionSize=8M"
+        "-XX:G1ReservePercent=20"
+        "-XX:InitiatingHeapOccupancyPercent=15"
+      )
+    else
+      echo "Use Aikar's Advanced memory options"
+      jvm_arguments+=(
+        "-XX:G1NewSizePercent=40"
+        "-XX:G1MaxNewSizePercent=50"
+        "-XX:G1HeapRegionSize=16M"
+        "-XX:G1ReservePercent=15"
+        "-XX:InitiatingHeapOccupancyPercent=20"
+      )
+    fi
+  elif [[ $JVM_TYPE == "OpenJ9" ]]; then
+    # Nursery configuration
+    MEMORY_MEGA=$(($MEMORY * 1024))
+    
+    # Recommended memory setup by
+    # https://gist.github.com/Artuto/2cf3d419407aee2567f91683682300ad
+    MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 2))
+    MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 5 * 4)) 
+    
+    # Override values to match nursery range with Aikar's. 
+    # Comment out to use recommended nursery above.
+    if [[ $MEMORY -lt 12 ]]; then
+      MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 3))
+      MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 4))    
+    else
+      MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 4))
+      MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 5))
+    fi
+    
+    jvm_arguments+=(
+      "-Xmns${MEMORY_NURSERY_MIN}M"
+      "-Xmnx${MEMORY_NURSERY_MAX}M"
+    )
+    
+    jvm_arguments+=(
+      # Disable explicit GC
+      "-Xdisableexplicitgc"
+    
+      # Use Gencon GC for short-lived memory allocs
+      "-Xgcpolicy:gencon"
+      
+      # minimize pause time during GC
+      "-Xgc:concurrentScavenge"
+      
+      # set maximum GC pause time to 3% of runtime
+      "-Xgc:dnssExpectedTimeRatioMaximum=3"
+      
+      # Disable Adaptive Tenture in gencon GC
+      "-Xgc:scvNoAdaptiveTenure"
+    )  
   else
-    echo "Use Aikar's Advanced memory options"
-    jvm_arguments+=(
-      "-XX:G1NewSizePercent=40"
-      "-XX:G1MaxNewSizePercent=50"
-      "-XX:G1HeapRegionSize=16M"
-      "-XX:G1ReservePercent=15"
-      "-XX:InitiatingHeapOccupancyPercent=20"
-    )
+    echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags."
   fi
-
+  
+  
   if [[ $DEBUG_PORT -gt -1 ]]; then
     java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
 
