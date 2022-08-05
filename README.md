@@ -47,39 +47,39 @@
      ```bash
      choco install -y wget jq
      ```
-
-3. (Optional) Download `settings.env` to configure server
-   1. Download [settings.env](https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env) and place it into your server directory
-      * wget
-        ```bash
-        wget https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
-        ```
-
-      * curl
-        ```bash
-        curl -o settings.env https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
-        ```
-  
-   2. Modify the downloaded `settings.env` to match with your system specs
-
-4. Run script
+3. Run script
    1. Automatic install
-      * wget
-        ```bash
-        wget -O - https://s4a.it/mc-setup | bash
-        ```
+      1. (Optional) Configure your server by setting your environment variables (Refer to [settings.env](/settings.env))
+         * wget
+           ```bash
+           wget https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
+           set -a; source settings.env; set +a
+           ```
 
-      * curl
-        ```bash
-        curl -L https://s4a.it/mc-setup | bash
-        ```
+         * curl
+           ```bash
+           curl -o settings.env https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
+           set -a; source settings.env; set +a
+           ```
 
-      After the automatic install, `./run` will be generated automatically on your server directory. You can use `./run` to start your server after installation.
+      2. Run following one-liner script to install
+        * wget
+          ```bash
+          wget -O - https://s4a.it/mc-setup | bash
+          ```
+
+        * curl
+          ```bash
+          curl -L https://s4a.it/mc-setup | bash
+          ```
+
+        After the automatic install, `./run` will be generated automatically on your server directory. You can use `./run` to start your server after installation. (Don't forget to set environment variables before you run (e.g. load from file: `set -a; source settings.env; set +a`))
 
    2. Manual install
-      1. Download [run](https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/run) script to your server directory
+      1. Download [run](https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/run) script to your server directory
       2. Give executable permissions with `chmod +x ./run`.
-      3. `./run`
+      3. (Optional) Configure your server by modifying `./run` or your environment variables (Refer to [settings.env](/settings.env))
+      4. Run script by `./run`
 
 ## Note
 * Server jar files are in `~/.mcservers/`

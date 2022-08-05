@@ -81,11 +81,9 @@ set +a
 
 
 # Download itself if it is running from stdout (installation phase) 
-[[ -t 1 ]] || [[ -f run ]] && echo "Setting up minecraft-server-launcher at $(pwd)"
 [[ -t 1 ]] || [[ -f run ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/run" > /dev/null && chmod +x run > /dev/null
 
 # Setup target directory
-[[ -t 1 ]] || [[ -f run ]] && echo "Setting up minecraft-server-launcher at $(pwd)"
 mkdir -p "$DIR" && cd "$DIR" || exit
 
 [[ -f ../startSetup ]] && cp ../startSetup .
