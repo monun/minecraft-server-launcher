@@ -35,8 +35,12 @@
      ```
    - Windows (with [Chocolatey](https://chocolatey.org/install))
      ```bash
-     choco install -y wget jq zulu17
+     choco install -y wget jq
      ```
+     > If you don't have Java 17 installed. You can install it via Chocolatey (Azul Zulu, Hotspot)
+     > ```bash
+     > choco install -y zulu17
+     > ```
 
 3. (Optional) Download `settings.env` to configure server
    1. Download [settings.env](https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env) and place it into your server directory
