@@ -16,12 +16,12 @@ while :; do
   
   # If current showSettings properties contains Hotspot string:
   case "$JAVA_PROPS" in
-    *"HotSpot"*|*"Hotspot"*) JVM_TYPE="hotspot"
-    *"OpenJ9"*) JVM_TYPE="openj9"
+    *"HotSpot"*|*"Hotspot"*) JVM_TYPE="hotspot";;
+    *"OpenJ9"*) JVM_TYPE="openj9";;
     
     # Added just for backwards compatibility with IBM J9 (up to Java 1.7)
     # Just in case.
-    *"J9"*) JVM_TYPE="openj9"
+    *"J9"*) JVM_TYPE="openj9";;
   esac
   
   echo "JAR=$JAR"
