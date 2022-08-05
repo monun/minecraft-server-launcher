@@ -122,7 +122,17 @@ while :; do
       
       # Disable Adaptive Tenture in gencon GC
       "-Xgc:scvNoAdaptiveTenure"
-    )  
+    )
+
+    # TODO: -Xtune:virtualized flag if system is virtualized.
+    VIRTUALIZED=0
+
+    if [[ $VIRTUALIZED -eq 1 ]]; then
+      jvm_arguments+=(
+        "-Xtune:virtualized"
+      )
+    fi
+
   else
     # display JVM runtime detection error to stderr
     echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2
