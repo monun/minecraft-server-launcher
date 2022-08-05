@@ -15,7 +15,7 @@
      Verify it via `whereis java`.  
 
 2. Install Dependencies
-   > The following scripts considers as your system has Java Runtime already installed.
+   > The following scripts does not install Java Runtime. Install JRE if you don't have one installed beforehand.
    - Ubuntu/Debian:
      ```bash
      sudo apt install jq git wget tar
