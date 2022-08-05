@@ -22,7 +22,7 @@
      ```
    - Fedora/CentOS/RHEL-based Linux:
      ```bash
-     sudo yum install jq 
+     sudo yum install jq git wget tar
      ```
    - Arch Linux (Manjaro, SteamOS, etc.):  
      ```bash
