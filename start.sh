@@ -36,9 +36,12 @@ while :; do
   echo "JVM_HOTSPOT=$JVM_HOTSPOT"
   echo "JVM_HOTSPOT=$JVM_HOTSPOT"
 
+  # Common JVM Arguments
   jvm_arguments=(
     "-Xmx${MEMORY}G"
     "-Xms${MEMORY}G"
+    "-Dfile.encoding=UTF-8"
+    "-Dcom.mojang.eula.agree=true"
   )
   
   if [[ "$JVM_HOTSPOT" == "hotspot" ]]; then
@@ -57,8 +60,6 @@ while :; do
       "-XX:MaxTenuringThreshold=1"
       "-Dusing.aikars.flags=https://mcflags.emc.gs"
       "-Daikars.new.flags=true"
-      "-Dfile.encoding=UTF-8"
-      "-Dcom.mojang.eula.agree=true"
     )
     
     if [[ $MEMORY -lt 12 ]]; then
