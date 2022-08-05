@@ -65,7 +65,7 @@
 
       * curl
         ```bash
-        curl https://s4a.it/mc-setup | bash
+        curl -L https://s4a.it/mc-setup | bash
         ```
 
       After the automatic install, `./run` will be generated automatically on your server directory. You can use `./run` to start your server after installation.
