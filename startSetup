@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Testing with Fork
+REPO_BASE_URL="https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher"
+REPO_BRANCH="master"
+
 # Check wget
 ! type -p wget >/dev/null && echo "wget not found" && exit
 
@@ -14,7 +18,7 @@
 
 if [[ -z $JAR ]]; then
   [[ -f ../startDeploy ]] && cp ../startDeploy .
-  [[ ! -f startDeploy ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/startDeploy"
+  [[ ! -f startDeploy ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/startDeploy"
   chmod +x ./startDeploy
   JAR=$(./startDeploy $SERVER)
 fi
@@ -37,7 +41,7 @@ fi
 
 # Download start script
 [[ -f ../start.sh ]] && cp ../start.sh .
-[[ ! -f start.sh ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/start.sh" >/dev/null
+[[ ! -f start.sh ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/start.sh" >/dev/null
 
 # Start server
 chmod +x ./start.sh
