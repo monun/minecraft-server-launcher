@@ -78,7 +78,7 @@
 
    2. Manual install
       1. Download [run](https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/run) script to your server directory
-      2. Give a executable permissions with `chmod +x ./run`.
+      2. Give executable permissions with `chmod +x ./run`.
       3. `./run`
 
 ## Note
