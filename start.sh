@@ -124,9 +124,9 @@ while :; do
     )
 
     # TODO: -Xtune:virtualized flag if system is virtualized.
-    VIRTUALIZED=0
+    # VIRTUALIZED=0
 
-    if [[ $VIRTUALIZED -eq 1 ]]; then
+    if [[ $VIRTUALIZED = true ]]; then
       jvm_arguments+=(
         "-Xtune:virtualized"
       )
