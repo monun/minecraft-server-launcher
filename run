@@ -6,9 +6,15 @@ REPO_BRANCH="master"
 # Download itself if it is running from stdout (installation phase) 
 [[ -t 1 ]] || [[ -f run ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/run" && chmod +x run
 
-# Load variables from settings.env
-[[ ! -f settings.env ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/settings.env"
-source settings.env
+
+# download settings.env if settings.env does not exist and SKIP_SETTINGS_ENV is not set
+if [[ -z "$SKIP_SETTINGS_ENV" ]]; then
+   [[ ! -f settings.env ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/settings.env"
+   
+   # export all in settings.env
+   set -a; source settings.env; set +a
+fi
+
 
 mkdir -p "$DIR" && cd "$DIR" || exit
 
