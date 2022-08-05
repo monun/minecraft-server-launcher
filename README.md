@@ -5,8 +5,7 @@
 * [**jq**](https://stedolan.github.io/jq/)
 * git (Spigot only)
 * tar (Optional)
-
-
+* bash 4.0+
 
 ## Installation
 
