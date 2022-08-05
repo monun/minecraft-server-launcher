@@ -33,8 +33,7 @@ while :; do
   echo "WORLDS=$WORLDS"
   echo "PORT=$PORT"
   echo "DEBUG_PORT=$DEBUG_PORT"
-  echo "JVM_HOTSPOT=$JVM_HOTSPOT"
-  echo "JVM_HOTSPOT=$JVM_HOTSPOT"
+  echo "JVM_TYPE=$JVM_TYPE"
 
   # Common JVM Arguments
   jvm_arguments=(
@@ -44,7 +43,7 @@ while :; do
     "-Dcom.mojang.eula.agree=true"
   )
   
-  if [[ "$JVM_HOTSPOT" == "hotspot" ]]; then
+  if [[ $JVM_TYPE == "hotspot" ]]; then
     jvm_arguments+=(
       "-XX:+ParallelRefProcEnabled"
       "-XX:MaxGCPauseMillis=200"
