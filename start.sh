@@ -80,7 +80,7 @@ while :; do
         "-XX:InitiatingHeapOccupancyPercent=20"
       )
     fi
-  elif [[ $JVM_TYPE == "OpenJ9" ]]; then
+  elif [[ $JVM_TYPE == "openj9" ]]; then
     # Nursery configuration
     MEMORY_MEGA=$(($MEMORY * 1024))
     
