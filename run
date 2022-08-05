@@ -12,7 +12,7 @@ if [[ -z "$SKIP_SETTINGS_ENV" ]]; then
    [[ ! -f "$SETTINGS_ENV_FILE" ]] && wget -O $SETTINGS_ENV_FILE -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/settings.env"
    
    # export all in settings.env
-   set -a; source $SETTINGS_ENV_FILE; set +a
+   set -a; source "$SETTINGS_ENV_FILE"; set +a
 fi
 
 mkdir -p "$DIR" && cd "$DIR" || exit
