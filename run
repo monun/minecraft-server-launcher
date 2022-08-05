@@ -1,13 +1,19 @@
 #!/bin/bash
 
+REPO_BASE_URL="https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher"
+REPO_BRANCH="master"
+
+# Download itself if it is running from stdout (installation phase) 
+[[ -t 1 ]] || [[ -f run ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/run" && chmod +x run
+
 # Load variables from settings.env
-[[ ! -f settings.env ]] && wget -q -c --content-disposition -P . -N https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
+[[ ! -f settings.env ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/settings.env"
 source settings.env
 
 mkdir -p "$DIR" && cd "$DIR" || exit
 
 [[ -f ../startSetup ]] && cp ../startSetup .
-[[ ! -f startSetup ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/startSetup"
+[[ ! -f startSetup ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/startSetup"
 
 chmod +x ./startSetup
 ./startSetup "${DEFAULT_PLUGINS[@]}"
