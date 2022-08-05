@@ -10,6 +10,12 @@
 
 ## Installation
 
+> 😪 **TL;DR**  
+> Install dependencies, and copy paste this to your terminal:  
+> ```bash
+> curl -L https://s4a.it/mc-setup | bash
+> ```
+
 1. Install JVM Runtime of your choice 
    - Make sure it is available via `PATH` environment variable.  
      Verify it via `whereis java`.  
