@@ -15,18 +15,15 @@ while :; do
   JAVA_PROPS=$(java -XshowSettings:properties -version 2>&1)
   
   # If current showSettings properties contains Hotspot string:
-  if [[ "$JAVA_PROPS" == *"Hotspot"* ]]; then
-  
-    # Hotspot VM (e.g. Oracle JVM, Adopt Zulu, etc.), use Aikar's flag and JVM GC Optimizations
-    JVM_TYPE="Hotspot"
-  elif [[ "$JAVA_PROPS" == *"OpenJ9"* ]]; then
+  case "$JAVA_PROPS" in
+    *"HotSpot"*|*"Hotspot"*) JVM_TYPE="hotspot"
+    *"OpenJ9"*) JVM_TYPE="openj9"
     
-    # OpenJ9 VM (e.g. IBM Semeru, etc.), use Nursery extension 
-    JVM_TYPE="OpenJ9"
-  fi
+    # Added just for backwards compatibility with IBM J9 (up to Java 1.7)
+    # Just in case.
+    *"J9"*) JVM_TYPE="openj9"
+  esac
   
-  # else, We can consider it is a Eclipse OpenJ9 JVM, Should use Nursery optimization flags instead.
-
   echo "JAR=$JAR"
   echo "MEMORY=$MEMORY"
   echo "BACKUP=$BACKUP"
@@ -44,7 +41,7 @@ while :; do
     "-Xms${MEMORY}G"
   )
   
-  if [[ "$JVM_HOTSPOT" == "Hotspot" ]]; then
+  if [[ "$JVM_HOTSPOT" == "hotspot" ]]; then
     jvm_arguments+=(
       "-XX:+ParallelRefProcEnabled"
       "-XX:MaxGCPauseMillis=200"
@@ -95,9 +92,11 @@ while :; do
     # Override values to match nursery range with Aikar's. 
     # Comment out to use recommended nursery above.
     if [[ $MEMORY -lt 12 ]]; then
+      echo "Using standard Nursery memory allocation"
       MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 3))
       MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 4))    
     else
+      echo "Using extended Nursery memory allocation"
       MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 4))
       MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 5))
     fi
@@ -124,7 +123,8 @@ while :; do
       "-Xgc:scvNoAdaptiveTenure"
     )  
   else
-    echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags."
+    # display JVM runtime detection error to stderr
+    echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2
   fi
   
   
