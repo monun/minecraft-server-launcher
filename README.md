@@ -15,7 +15,7 @@
      Verify it via `whereis java`.  
 
 2. Install Dependencies
-   > The following scripts considers Java Runtime is already installed on your system.
+   > The following scripts considers as your system has Java Runtime already installed.
    - Ubuntu/Debian:
      ```bash
      sudo apt install jq git wget tar
@@ -39,7 +39,6 @@
      ```
 
 3. (Optional) Download `settings.env` to configure server
-
    1. Download [settings.env](https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env) and place it into your server directory
       * wget
         ```bash
