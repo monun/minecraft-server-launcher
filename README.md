@@ -5,7 +5,7 @@
 * [**jq**](https://stedolan.github.io/jq/)
 * git (Spigot only)
 * tar (Optional)
-* bash 4.0+
+* bash
 
 ## Installation
 
@@ -17,7 +17,12 @@
 
 1. Install JVM Runtime of your choice 
    - Make sure it is available via `PATH` environment variable.  
-     Verify it via `whereis java`.  
+     Verify it via `whereis java`. (*NIX systems only)  
+
+   - On Windows, You can install it via [Chocolatey](https://chocolatey.org/install)
+     ```bash
+     choco install -y zulu17
+     ```
 
 2. Install Dependencies
    > The following scripts does not install Java Runtime. Install JRE if you don't have one installed beforehand.
@@ -42,10 +47,6 @@
      ```bash
      choco install -y wget jq
      ```
-     > If you don't have Java 17 installed. You can install it via Chocolatey (Azul Zulu, Hotspot)
-     > ```bash
-     > choco install -y zulu17
-     > ```
 
 3. (Optional) Download `settings.env` to configure server
    1. Download [settings.env](https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env) and place it into your server directory
