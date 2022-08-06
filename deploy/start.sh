@@ -8,7 +8,18 @@ fi
 
 while :; do
   rm -f ".start"
-
+  
+  JVM_TYPE=""
+  
+  # outputs to stderr by default. route to stdout
+  JAVA_PROPS=$(java -XshowSettings:properties -version 2>&1)
+  
+  # detect JVM runtime
+  case "$JAVA_PROPS" in
+    *"HotSpot"*|*"Hotspot"*) JVM_TYPE="hotspot";;
+    *"OpenJ9"*|*"J9"*) JVM_TYPE="openj9";;
+  esac
+  
   echo "JAR=$JAR"
   echo "MEMORY=$MEMORY"
   echo "BACKUP=$BACKUP"
@@ -18,48 +29,28 @@ while :; do
   echo "WORLDS=$WORLDS"
   echo "PORT=$PORT"
   echo "DEBUG_PORT=$DEBUG_PORT"
+  echo "JVM_TYPE=$JVM_TYPE"
 
+  # Common JVM Arguments
   jvm_arguments=(
     "-Xmx${MEMORY}G"
     "-Xms${MEMORY}G"
-    "-XX:+ParallelRefProcEnabled"
-    "-XX:MaxGCPauseMillis=200"
-    "-XX:+UnlockExperimentalVMOptions"
-    "-XX:+DisableExplicitGC"
-    "-XX:+AlwaysPreTouch"
-    "-XX:G1HeapWastePercent=5"
-    "-XX:G1MixedGCCountTarget=4"
-    "-XX:G1MixedGCLiveThresholdPercent=90"
-    "-XX:G1RSetUpdatingPauseTimePercent=5"
-    "-XX:SurvivorRatio=32"
-    "-XX:+PerfDisableSharedMem"
-    "-XX:MaxTenuringThreshold=1"
-    "-Dusing.aikars.flags=https://mcflags.emc.gs"
-    "-Daikars.new.flags=true"
     "-Dfile.encoding=UTF-8"
     "-Dcom.mojang.eula.agree=true"
   )
 
-  if [[ $MEMORY -lt 12 ]]; then
-    echo "Use Aikar's standard memory options"
-    jvm_arguments+=(
-      "-XX:G1NewSizePercent=30"
-      "-XX:G1MaxNewSizePercent=40"
-      "-XX:G1HeapRegionSize=8M"
-      "-XX:G1ReservePercent=20"
-      "-XX:InitiatingHeapOccupancyPercent=15"
-    )
-  else
-    echo "Use Aikar's Advanced memory options"
-    jvm_arguments+=(
-      "-XX:G1NewSizePercent=40"
-      "-XX:G1MaxNewSizePercent=50"
-      "-XX:G1HeapRegionSize=16M"
-      "-XX:G1ReservePercent=15"
-      "-XX:InitiatingHeapOccupancyPercent=20"
-    )
-  fi
-
+  case $JVM_TYPE in
+    "hotspot")
+      [[ -f "args.hotspot" ]] || wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/args/args.hotspot" > /dev/null
+      source args.hotspot;;
+    "openj9")
+      [[ -f "args.openj9" ]] || wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/args/args.openj9" > /dev/null
+      source args.openj9;;
+    *)
+      # display JVM runtime detection error to stderr
+      echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2;;
+  esac
+  
   if [[ $DEBUG_PORT -gt -1 ]]; then
     java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
 
