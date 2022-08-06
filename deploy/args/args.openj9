@@ -22,19 +22,19 @@ jvm_arguments+=(
 
 if [[ $MEMORY -lt 4 ]]; then
     jvm_arguments+=(
-    # Use Gencon GC for short-lived memory allocs
-    "-Xgcpolicy:gencon"
-    
-    # minimize pause time during GC
-    "-Xgc:concurrentScavenge"
+        # Use Gencon GC for short-lived memory allocs
+        "-Xgcpolicy:gencon"
 
-    # Disable Adaptive Tenture in gencon GC
-    "-Xgc:scvNoAdaptiveTenure"
+        # minimize pause time during GC
+        "-Xgc:concurrentScavenge"
+
+        # Disable Adaptive Tenture in gencon GC
+        "-Xgc:scvNoAdaptiveTenure"
     )
 else
     jvm_arguments+=(
-    # Use Gencon GC for short-lived memory allocs
-    "-Xgcpolicy:balanced"
+        # Use Gencon GC for short-lived memory allocs
+        "-Xgcpolicy:balanced"
     )
 fi
 
@@ -44,12 +44,11 @@ jvm_arguments+=(
 
     # set maximum GC pause time to 3% of runtime
     "-Xgc:dnssExpectedTimeRatioMaximum=3"
-    
 )
 
 # Use VPS Optimization flags if VIRTUALIZED is set to true
 if [[ $VIRTUALIZED = true ]]; then
     jvm_arguments+=(
-    "-Xtune:virtualized"
+        "-Xtune:virtualized"
     )
 fi
