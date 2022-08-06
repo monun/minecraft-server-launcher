@@ -3,11 +3,6 @@
 # Nursery configuration
 MEMORY_MEGA=$(($MEMORY * 1024))
 
-# Recommended memory setup by
-# https://gist.github.com/Artuto/2cf3d419407aee2567f91683682300ad
-MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 2))
-MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 5 * 4)) 
-
 # Override values to match nursery range with Aikar's. 
 # Comment out to use recommended nursery above.
 if [[ $MEMORY -lt 12 ]]; then
