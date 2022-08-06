@@ -3,8 +3,7 @@
 # Nursery configuration
 MEMORY_MEGA=$(($MEMORY * 1024))
 
-# Override values to match nursery range with Aikar's. 
-# Comment out to use recommended nursery above.
+# Set Nursery Range via allocated memory
 if [[ $MEMORY -lt 12 ]]; then
     echo "Using standard Nursery memory allocation"
     MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 3))
