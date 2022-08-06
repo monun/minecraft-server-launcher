@@ -14,14 +14,10 @@ while :; do
   # outputs to stderr by default. route to stdout
   JAVA_PROPS=$(java -XshowSettings:properties -version 2>&1)
   
-  # If current showSettings properties contains Hotspot string:
+  # detect JVM runtime
   case "$JAVA_PROPS" in
     *"HotSpot"*|*"Hotspot"*) JVM_TYPE="hotspot";;
-    *"OpenJ9"*) JVM_TYPE="openj9";;
-    
-    # Added just for backwards compatibility with IBM J9 (up to Java 1.7)
-    # Just in case.
-    *"J9"*) JVM_TYPE="openj9";;
+    *"OpenJ9"*|*"J9"*) JVM_TYPE="openj9";;
   esac
   
   echo "JAR=$JAR"
