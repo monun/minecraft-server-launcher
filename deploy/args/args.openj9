@@ -52,9 +52,7 @@ jvm_arguments+=(
     
 )
 
-# TODO: -Xtune:virtualized flag if system is virtualized.
-# VIRTUALIZED=true
-
+# Use VPS Optimization flags if VIRTUALIZED is set to true
 if [[ $VIRTUALIZED = true ]]; then
     jvm_arguments+=(
     "-Xtune:virtualized"
