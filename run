@@ -13,10 +13,10 @@ set -a
 ####################################################################
 
 ## Target GitHub Repository's raw baseURL for fetching scripts
-[[ -z "$REPO_BASE_URL" ]] && REPO_BASE_URL="https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher"
+[[ -z "$REPO_BASE_URL" ]] && REPO_BASE_URL="https://raw.githubusercontent.com/monun/minecraft-server-launcher"
 
 ## Target branch.
-[[ -z "$REPO_BASE_BRANCH" ]] && REPO_BRANCH="feature/one-liner-oobe-and-openj9-support"
+[[ -z "$REPO_BASE_BRANCH" ]] && REPO_BRANCH="master"
 
 
 if [[ -z $FORCE_USE_ENV ]]; then

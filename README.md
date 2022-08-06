@@ -52,13 +52,13 @@
       1. (Optional) Configure your server by setting your environment variables (Refer to [settings.env](/settings.env))
          * wget
            ```bash
-           wget https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
+           wget https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/settings.env
            set -a; source settings.env; set +a
            ```
 
          * curl
            ```bash
-           curl -o settings.env https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/settings.env
+           curl -o settings.env https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/settings.env
            set -a; source settings.env; set +a
            ```
 
@@ -76,7 +76,7 @@
         After the automatic install, `./run` will be generated automatically on your server directory. You can use `./run` to start your server after installation. (Don't forget to set environment variables before you run (e.g. load from file: `set -a; source settings.env; set +a`))
 
    2. Manual install
-      1. Download [run](https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher/master/run) script to your server directory
+      1. Download [run](https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/run) script to your server directory
       2. Give executable permissions with `chmod +x ./run`.
       3. (Optional) Configure your server by modifying `./run` or your environment variables (Refer to [settings.env](/settings.env))
       4. Run script by `./run`
