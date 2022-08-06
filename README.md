@@ -65,12 +65,12 @@
       2. Run following one-liner script to install
         * wget
           ```bash
-          wget -O - https://s4a.it/mc-setup | bash
+          bash <(wget -O - https://s4a.it/mc-setup)
           ```
 
         * curl
           ```bash
-          curl -L https://s4a.it/mc-setup | bash
+          bash <(curl -L https://s4a.it/mc-setup)
           ```
 
         After the automatic install, `./run` will be generated automatically on your server directory. You can use `./run` to start your server after installation. (Don't forget to set environment variables before you run (e.g. load from file: `set -a; source settings.env; set +a`))
