@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Nursery configuration
+MEMORY_MEGA=$(($MEMORY * 1024))
+
+# Recommended memory setup by
+# https://gist.github.com/Artuto/2cf3d419407aee2567f91683682300ad
+MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 2))
+MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 5 * 4)) 
+
+# Override values to match nursery range with Aikar's. 
+# Comment out to use recommended nursery above.
+if [[ $MEMORY -lt 12 ]]; then
+    echo "Using standard Nursery memory allocation"
+    MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 3))
+    MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 4))    
+else
+    echo "Using extended Nursery memory allocation"
+    MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 4))
+    MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 5))
+fi
+
+jvm_arguments+=(
+    "-Xmns${MEMORY_NURSERY_MIN}M"
+    "-Xmnx${MEMORY_NURSERY_MAX}M"
+)
+
+if [[ $MEMORY -lt 4 ]]; then
+    jvm_arguments+=(
+    # Use Gencon GC for short-lived memory allocs
+    "-Xgcpolicy:gencon"
+    
+    # minimize pause time during GC
+    "-Xgc:concurrentScavenge"
+
+    # Disable Adaptive Tenture in gencon GC
+    "-Xgc:scvNoAdaptiveTenure"
+    )
+else
+    jvm_arguments+=(
+    # Use Gencon GC for short-lived memory allocs
+    "-Xgcpolicy:balanced"
+    )
+fi
+
+jvm_arguments+=(
+    # Disable explicit GC
+    "-Xdisableexplicitgc"
+
+    # set maximum GC pause time to 3% of runtime
+    "-Xgc:dnssExpectedTimeRatioMaximum=3"
+    
+)
+
+# TODO: -Xtune:virtualized flag if system is virtualized.
+# VIRTUALIZED=true
+
+if [[ $VIRTUALIZED = true ]]; then
+    jvm_arguments+=(
+    "-Xtune:virtualized"
+    )
+fi

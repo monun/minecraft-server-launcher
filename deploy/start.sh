@@ -42,101 +42,18 @@ while :; do
     "-Dfile.encoding=UTF-8"
     "-Dcom.mojang.eula.agree=true"
   )
-  
-  if [[ $JVM_TYPE == "hotspot" ]]; then
-    jvm_arguments+=(
-      "-XX:+ParallelRefProcEnabled"
-      "-XX:MaxGCPauseMillis=200"
-      "-XX:+UnlockExperimentalVMOptions"
-      "-XX:+DisableExplicitGC"
-      "-XX:+AlwaysPreTouch"
-      "-XX:G1HeapWastePercent=5"
-      "-XX:G1MixedGCCountTarget=4"
-      "-XX:G1MixedGCLiveThresholdPercent=90"
-      "-XX:G1RSetUpdatingPauseTimePercent=5"
-      "-XX:SurvivorRatio=32"
-      "-XX:+PerfDisableSharedMem"
-      "-XX:MaxTenuringThreshold=1"
-      "-Dusing.aikars.flags=https://mcflags.emc.gs"
-      "-Daikars.new.flags=true"
-    )
-    
-    if [[ $MEMORY -lt 12 ]]; then
-      echo "Use Aikar's standard memory options"
-      jvm_arguments+=(
-        "-XX:G1NewSizePercent=30"
-        "-XX:G1MaxNewSizePercent=40"
-        "-XX:G1HeapRegionSize=8M"
-        "-XX:G1ReservePercent=20"
-        "-XX:InitiatingHeapOccupancyPercent=15"
-      )
-    else
-      echo "Use Aikar's Advanced memory options"
-      jvm_arguments+=(
-        "-XX:G1NewSizePercent=40"
-        "-XX:G1MaxNewSizePercent=50"
-        "-XX:G1HeapRegionSize=16M"
-        "-XX:G1ReservePercent=15"
-        "-XX:InitiatingHeapOccupancyPercent=20"
-      )
-    fi
-  elif [[ $JVM_TYPE == "openj9" ]]; then
-    # Nursery configuration
-    MEMORY_MEGA=$(($MEMORY * 1024))
-    
-    # Recommended memory setup by
-    # https://gist.github.com/Artuto/2cf3d419407aee2567f91683682300ad
-    MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 2))
-    MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 5 * 4)) 
-    
-    # Override values to match nursery range with Aikar's. 
-    # Comment out to use recommended nursery above.
-    if [[ $MEMORY -lt 12 ]]; then
-      echo "Using standard Nursery memory allocation"
-      MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 3))
-      MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 4))    
-    else
-      echo "Using extended Nursery memory allocation"
-      MEMORY_NURSERY_MIN=$(($MEMORY_MEGA / 10 * 4))
-      MEMORY_NURSERY_MAX=$(($MEMORY_MEGA / 10 * 5))
-    fi
-    
-    jvm_arguments+=(
-      "-Xmns${MEMORY_NURSERY_MIN}M"
-      "-Xmnx${MEMORY_NURSERY_MAX}M"
-    )
-    
-    jvm_arguments+=(
-      # Disable explicit GC
-      "-Xdisableexplicitgc"
-    
-      # Use Gencon GC for short-lived memory allocs
-      "-Xgcpolicy:gencon"
-      
-      # minimize pause time during GC
-      "-Xgc:concurrentScavenge"
-      
-      # set maximum GC pause time to 3% of runtime
-      "-Xgc:dnssExpectedTimeRatioMaximum=3"
-      
-      # Disable Adaptive Tenture in gencon GC
-      "-Xgc:scvNoAdaptiveTenure"
-    )
 
-    # TODO: -Xtune:virtualized flag if system is virtualized.
-    # VIRTUALIZED=0
-
-    if [[ $VIRTUALIZED = true ]]; then
-      jvm_arguments+=(
-        "-Xtune:virtualized"
-      )
-    fi
-
-  else
-    # display JVM runtime detection error to stderr
-    echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2
-  fi
-  
+  case $JVM_TYPE in
+    "hotspot")
+      [[ -f "args.hotspot" ]] || wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/args/args.hotspot" > /dev/null
+      source args.hotspot;;
+    "openj9")
+      [[ -f "args.openj9" ]] || wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/args/args.openj9" > /dev/null
+      source args.openj9;;
+    *)
+      # display JVM runtime detection error to stderr
+      echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2;;
+  esac
   
   if [[ $DEBUG_PORT -gt -1 ]]; then
     java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')

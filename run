@@ -16,7 +16,7 @@ set -a
 [[ -z "$REPO_BASE_URL" ]] && REPO_BASE_URL="https://raw.githubusercontent.com/Alex4386/minecraft-server-launcher"
 
 ## Target branch.
-[[ -z "$REPO_BASE_BRANCH" ]] && REPO_BRANCH="master"
+[[ -z "$REPO_BASE_BRANCH" ]] && REPO_BRANCH="feature/one-liner-oobe-and-openj9-support"
 
 
 if [[ -z $FORCE_USE_ENV ]]; then
