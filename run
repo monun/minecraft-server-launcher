@@ -1,31 +1,18 @@
 #!/bin/bash
 
-
-######################### Configuration Section #######################
+####################### Configuration Section #####################
 
 # Use following variables as global-scope
 set -a
 
-####################################################################
 ######################## Upstream Settings #########################
-####################################################################
-# Modify these envs if you are trying to develop forks             #
-####################################################################
 
-## Target GitHub Repository's raw baseURL for fetching scripts
+[[ -f ./settings.env ]] && source ./settings.env
+
 [[ -z "$REPO_BASE_URL" ]] && REPO_BASE_URL="https://raw.githubusercontent.com/monun/minecraft-server-launcher"
-
-## Target branch.
 [[ -z "$REPO_BASE_BRANCH" ]] && REPO_BRANCH="master"
 
-
-if [[ -z $FORCE_USE_ENV ]]; then
-
-####################################################################
 ########################## Configurations ##########################
-####################################################################
-# Configuration variables for minecraft-server-launcher            #
-####################################################################
 
 ## Server directory name
 DIR="server"
@@ -42,12 +29,7 @@ BACKUP=false
 ## The server will always restart.
 RESTART=false
 
-
-####################################################################
 ################## Spigot or Paper Configurations ##################
-####################################################################
-# Configuration variables for minecraft-server-launcher            #
-####################################################################
 
 ## The maximum amount of players that the server will allow, this will bypass the max-players= value in server.properties file.
 PLAYERS=100
@@ -66,7 +48,7 @@ DEBUG_PORT=-1
 
 # Preinstallation plugins (url)
 DEFAULT_PLUGINS=(
-   'https://github.com/monun/auto-reloader/releases/download/0.0.5/auto-reloader-0.0.5.jar'
+   # 'https://github.com/monun/auto-reloader/releases/download/0.0.5/auto-reloader-0.0.5.jar'
 )
 
 # Uncomment to enable OpenJ9 performance tuning for VMs
@@ -79,15 +61,14 @@ set +a
 
 ####################### End of Configuration ######################
 
-
 # Download itself if it is running from stdout (installation phase) 
-[[ -t 1 ]] || [[ -f run ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/run" > /dev/null && chmod +x run > /dev/null
+[[ -t 1 ]] || [[ -f ./run ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/run" > /dev/null && chmod +x run > /dev/null
 
 # Setup target directory
 mkdir -p "$DIR" && cd "$DIR" || exit
 
 [[ -f ../startSetup ]] && cp ../startSetup .
-[[ ! -f startSetup ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/startSetup" > /dev/null
+[[ ! -f ./startSetup ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/startSetup" > /dev/null
 
 chmod +x ./startSetup
 ./startSetup "${DEFAULT_PLUGINS[@]}"
