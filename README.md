@@ -12,7 +12,7 @@
 > 😪 **TL;DR**  
 > Install dependencies, and copy paste this to your terminal:  
 > ```bash
-> curl -L https://s4a.it/mc-setup | bash
+> curl -L https://raw.githubusercontent.com/monun/minecraft-server-launcher/master/run | bash
 > ```
 
 1. Install JVM Runtime of your choice 
