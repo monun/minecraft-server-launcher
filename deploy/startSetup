@@ -13,8 +13,7 @@
 [[ -f $SERVER ]] && JAR=$SERVER
 
 if [[ -z $JAR ]]; then
-  [[ -f ../startDeploy ]] && cp ../startDeploy .
-  [[ ! -f startDeploy ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/startDeploy"
+  [[ ! -f ./startDeploy ]] && wget -q -c --content-disposition -P . -N "$REPO_DEPLOY/startDeploy"
   chmod +x ./startDeploy
   JAR=$(./startDeploy $SERVER)
 fi
@@ -36,8 +35,7 @@ if [[ $SERVER != vanilla* ]]; then
 fi
 
 # Download start script
-[[ -f ../start.sh ]] && cp ../start.sh .
-[[ ! -f start.sh ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/start.sh" >/dev/null
+[[ ! -f ./start.sh ]] && wget -q -c --content-disposition -P . -N "$REPO_DEPLOY/start.sh" >/dev/null
 
 # Start server
 chmod +x ./start.sh
