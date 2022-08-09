@@ -61,8 +61,8 @@ set +a
 
 ####################### End of Configuration ######################
 
-# Download itself if it is running from stdout (installation phase) 
-[[ -t 1 ]] || [[ -f ./run ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/run" > /dev/null && chmod +x run > /dev/null
+# Download itself if it is running from stdout (installation phase)
+[[ -t 1 ]] && [[ ! -f ./run ]] && wget -q -c --content-disposition -P . -N "$REPO_ROOT/run" >/dev/null && chmod +x ./run >/dev/null
 
 # Setup target directory
 mkdir -p "$DIR" && cd "$DIR" || exit
