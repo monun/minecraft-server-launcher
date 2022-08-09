@@ -66,6 +66,7 @@ set +a
 
 # Setup target directory
 mkdir -p "$DIR" && cd "$DIR" || exit
+[[ -d ../deploy ]] && cp -R ../deploy/* .
 
 [[ -f ../startSetup ]] && cp ../startSetup .
 [[ ! -f ./startSetup ]] && wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/startSetup" > /dev/null
