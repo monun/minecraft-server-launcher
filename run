@@ -6,11 +6,11 @@
 set -a
 
 ######################## Upstream Settings #########################
+REPO_BASE_URL="https://raw.githubusercontent.com/monun/minecraft-server-launcher"
+REPO_BRANCH="master"
 
-[[ -f ./settings.env ]] && source ./settings.env
-
-[[ -z "$REPO_BASE_URL" ]] && REPO_BASE_URL="https://raw.githubusercontent.com/monun/minecraft-server-launcher"
-[[ -z "$REPO_BASE_BRANCH" ]] && REPO_BRANCH="master"
+REPO_ROOT="$REPO_BASE_URL/$REPO_BRANCH"
+REPO_DEPLOY="$REPO_ROOT/deploy"
 
 ########################## Configurations ##########################
 
