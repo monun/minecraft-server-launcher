@@ -13,7 +13,6 @@ REPO_ROOT="$REPO_BASE_URL/$REPO_BRANCH"
 REPO_DEPLOY="$REPO_ROOT/deploy"
 
 ########################## Configurations ##########################
-
 ## Server directory name
 DIR="server"
 
@@ -30,7 +29,6 @@ BACKUP=false
 RESTART=false
 
 ################## Spigot or Paper Configurations ##################
-
 ## The maximum amount of players that the server will allow, this will bypass the max-players= value in server.properties file.
 PLAYERS=100
 
@@ -48,13 +46,11 @@ DEBUG_PORT=-1
 
 # Preinstallation plugins (url)
 DEFAULT_PLUGINS=(
-   # 'https://github.com/monun/auto-reloader/releases/download/0.0.5/auto-reloader-0.0.5.jar'
+  # 'https://github.com/monun/auto-reloader/releases/download/0.0.5/auto-reloader-0.0.5.jar'
 )
 
 # Uncomment to enable OpenJ9 performance tuning for VMs
 # VIRTUALIZED=true
-
-fi
 
 # Use following variables as local-scope
 set +a
