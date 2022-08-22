@@ -74,7 +74,7 @@ while :; do
   if [[ $BACKUP = true ]]; then
     cancel=
     read -rs -n 1 -t 3 -p "Press any key to back up immediately or press 'N' to exit" cancel
-    [[ "$cancel" == [Nn] ]] && echo "EXIT" && exit
+    [[ "$cancel" == [Nn] ]] && exit
     echo 'Start the backup.'
     backup_file_name=$(date +"%y%m%d-%H%M%S")
     mkdir -p '.backup'
@@ -87,7 +87,7 @@ while :; do
   elif [[ $RESTART = true ]]; then
     cancel=
     read -rs -n 1 -t 3 -p "Press any key to restart immediately or press 'N' to exit" cancel
-    [[ "$cancel" == [Nn] ]] && echo "EXIT" && exit
+    [[ "$cancel" == [Nn] ]] && exit
     continue
   else
     break
