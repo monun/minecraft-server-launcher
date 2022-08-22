@@ -8,18 +8,18 @@ fi
 
 while :; do
   rm -f ".start"
-  
+
   JVM_TYPE=""
-  
+
   # outputs to stderr by default. route to stdout
   JAVA_PROPS=$(java -XshowSettings:properties -version 2>&1)
-  
+
   # detect JVM runtime
   case "$JAVA_PROPS" in
-    *"HotSpot"*|*"Hotspot"*) JVM_TYPE="hotspot";;
-    *"OpenJ9"*|*"J9"*) JVM_TYPE="openj9";;
+  *"HotSpot"* | *"Hotspot"*) JVM_TYPE="hotspot" ;;
+  *"OpenJ9"* | *"J9"*) JVM_TYPE="openj9" ;;
   esac
-  
+
   echo "JAR=$JAR"
   echo "MEMORY=$MEMORY"
   echo "BACKUP=$BACKUP"
@@ -39,18 +39,11 @@ while :; do
     "-Dcom.mojang.eula.agree=true"
   )
 
-  case $JVM_TYPE in
-    "hotspot")
-      [[ -f "args.hotspot" ]] || wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/args/args.hotspot" > /dev/null
-      source args.hotspot;;
-    "openj9")
-      [[ -f "args.openj9" ]] || wget -q -c --content-disposition -P . -N "$REPO_BASE_URL/$REPO_BRANCH/deploy/args/args.openj9" > /dev/null
-      source args.openj9;;
-    *)
-      # display JVM runtime detection error to stderr
-      echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2;;
-  esac
-  
+  mkdir -p "arguments" && cd "arguments"
+  [[ ! -f $JVM_TYPE ]] && wget -q -c --content-disposition -P . -N "$REPO_DEPLOY/arguments/$JVM_TYPE" >/dev/null
+  [[ -f $JVM_TYPE ]] && source "$JVM_TYPE" || echo "Unable to detect JVM Runtime type. Continuing without JVM GC Optimization flags." 1>&2
+  cd ..
+
   if [[ $DEBUG_PORT -gt -1 ]]; then
     java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
 
@@ -69,17 +62,19 @@ while :; do
     "--nogui"
   )
 
-    [[ $PLAYERS -gt -1 ]] && jvm_arguments+=("-s$PLAYERS")
-    [[ ! -z $PLUGINS ]] && jvm_arguments+=("-P$PLUGINS")
-    [[ ! -z $WORLDS ]] && jvm_arguments+=("-W$WORLDS")
-    [[ $PORT -gt -1 ]] && jvm_arguments+=("-p$PORT")
+  [[ $PLAYERS -gt -1 ]] && jvm_arguments+=("-s$PLAYERS")
+  [[ ! -z $PLUGINS ]] && jvm_arguments+=("-P$PLUGINS")
+  [[ ! -z $WORLDS ]] && jvm_arguments+=("-W$WORLDS")
+  [[ $PORT -gt -1 ]] && jvm_arguments+=("-p$PORT")
 
   echo "Parameters: ${jvm_arguments[@]}"
 
   java "${jvm_arguments[@]}"
 
   if [[ $BACKUP = true ]]; then
-    read -r -t 5 -p "Press Enter to start the backup immediately or Ctrl+C to cancel `echo $'\n> '`"
+    cancel=
+    read -rs -n 1 -t 3 -p "Press any key to back up immediately or press 'N' to exit" cancel
+    [[ "$cancel" == [Nn] ]] && echo "EXIT" && exit
     echo 'Start the backup.'
     backup_file_name=$(date +"%y%m%d-%H%M%S")
     mkdir -p '.backup'
@@ -90,7 +85,9 @@ while :; do
   if [[ -f ".start" ]]; then
     continue
   elif [[ $RESTART = true ]]; then
-    read -r -t 3 -p "The server restarts. Press Enter to start immediately or Ctrl+C to cancel `echo $'\n> '`"
+    cancel=
+    read -rs -n 1 -t 3 -p "Press any key to restart immediately or press 'N' to exit" cancel
+    [[ "$cancel" == [Nn] ]] && echo "EXIT" && exit
     continue
   else
     break

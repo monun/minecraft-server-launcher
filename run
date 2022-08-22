@@ -26,7 +26,7 @@ MEMORY=4
 BACKUP=false
 
 ## The server will always restart.
-RESTART=false
+RESTART=true
 
 ################## Spigot or Paper Configurations ##################
 ## The maximum amount of players that the server will allow, this will bypass the max-players= value in server.properties file.
