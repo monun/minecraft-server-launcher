@@ -59,7 +59,6 @@ while :; do
   jvm_arguments+=(
     "-jar"
     "$JAR"
-    "--nogui"
   )
 
   [[ $PLAYERS -gt -1 ]] && jvm_arguments+=("-s$PLAYERS")
