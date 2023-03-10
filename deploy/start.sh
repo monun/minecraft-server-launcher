@@ -65,6 +65,7 @@ while :; do
   [[ ! -z $PLUGINS ]] && jvm_arguments+=("-P$PLUGINS")
   [[ ! -z $WORLDS ]] && jvm_arguments+=("-W$WORLDS")
   [[ $PORT -gt -1 ]] && jvm_arguments+=("-p$PORT")
+  jvm_arguments+=("--nogui")
 
   echo "Parameters: ${jvm_arguments[@]}"
 
