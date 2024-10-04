@@ -30,10 +30,10 @@ mkdir -p "$repo"
 if [[ $server == "paper" ]]; then
   # Use latest build when the build is 'latest' or 'unspecified'
   [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version" | jq -r .builds[-1])
+  buildInfo=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build")
+  [[ $dev == "dev" ]] && downloadFile=$(echo "$buildInfo" | jq -r .downloads.\"mojang-mappings\".name)
+  [[ $downloadFile == null ]] && downloadFile=$(echo "$buildInfo" | jq -r .downloads.\"application\".name)
 
-  download="application"
-  [[ $dev == "dev" ]] && download="mojang-mappings"
-  downloadFile=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build" | jq -r .downloads.\"$download\".name)
   jar="$repo/$downloadFile"
 
   # Download paper if jar not exists
