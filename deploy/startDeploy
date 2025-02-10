@@ -29,8 +29,8 @@ mkdir -p "$repo"
 # Paper
 if [[ $server == "paper" ]]; then
   # Use latest build when the build is 'latest' or 'unspecified'
-  [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version" | jq -r .builds[-1])
-  buildInfo=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build")
+  [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://api.papermc.io/v2/projects/paper/versions/$version" | jq -r .builds[-1])
+  buildInfo=$(curl -s "https://api.papermc.io/v2/projects/paper/versions/$version/builds/$build")
   [[ $dev == "dev" ]] && downloadFile=$(echo "$buildInfo" | jq -r .downloads.\"mojang-mappings\".name)
   [[ $downloadFile == null ]] && downloadFile=$(echo "$buildInfo" | jq -r .downloads.\"application\".name)
 
@@ -38,7 +38,7 @@ if [[ $server == "paper" ]]; then
 
   # Download paper if jar not exists
   if [[ ! -f $jar ]]; then
-    wget -q "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build/downloads/$downloadFile" -O "$jar"
+    wget -q "https://api.papermc.io/v2/projects/paper/versions/$version/builds/$build/downloads/$downloadFile" -O "$jar"
   fi
 
 # Spigot

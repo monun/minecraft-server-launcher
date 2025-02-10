@@ -17,7 +17,7 @@ REPO_DEPLOY="$REPO_ROOT/deploy"
 DIR="server"
 
 ## Server type (local path or type[vanilla, spigot, paper]-version[1.xx.x, unspecified]-build[latest, unspecified, xx]-[dev])
-SERVER="paper-1.21.1-latest-dev"
+SERVER="paper-1.21.4-latest-dev"
 
 ## Server memory (GB)
 MEMORY=4
@@ -26,7 +26,7 @@ MEMORY=4
 BACKUP=false
 
 ## The server will always restart.
-RESTART=true
+RESTART=false
 
 ################## Spigot or Paper Configurations ##################
 ## The maximum amount of players that the server will allow, this will bypass the max-players= value in server.properties file.
